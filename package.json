@@ -1,0 +1,37 @@
+{
+  "name": "redbox-cli",
+  "version": "0.0.1",
+  "description": "redbox-cli",
+  "main": "index.js",
+  "bin": {
+    "redcli": "./bin/redbox"
+  },
+  "scripts": {
+    "dev": "tsc -w -p tsconfig.json",
+    "build": "tsc -p tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@githost.in66.cc:unpkg/redbox-cli.git"
+  },
+  "keywords": [
+    "redbox",
+    "cli"
+  ],
+  "author": "FE@in66.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^8.5.7",
+    "@types/yargs": "^10.0.0",
+    "tslint": "^5.8.0",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "inquirer": "^4.0.2",
+    "ora": "^1.3.0",
+    "shelljs": "^0.7.8",
+    "yargs": "^10.0.3"
+  }
+}

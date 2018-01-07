@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "lib": [
+          "es2017",
+        ],
+        "module": "commonjs",
+        "target": "ES5", 
+        "outDir":"lib",
+        "emitBOM": true,
+        "experimentalDecorators": true,
+        "moduleResolution":"node",
+        "pretty": true,
+        // "declaration":true,
+        "typeRoots": [
+          "./node_modules/@types/",
+          "./src/types/"
+        ]
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "src/**/*.spec.ts"
+    ]
+}
