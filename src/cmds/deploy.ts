@@ -4,11 +4,6 @@ import { request,delay,lastSpilt } from '../utils'
 import { createPromptModule } from 'inquirer'
 import { notify } from 'node-notifier'
 import { join } from 'path'
-notify({
-  'title': 'ssss',
-  'icon': join(__dirname, '../assets/jenkins.png'),
-  'message': `ssss`
-})
 const ora = require('ora')
 export const command = 'deploy [branch]'
 export const aliases = 'deploy'
