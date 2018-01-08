@@ -54,41 +54,22 @@ export const handler = async argv => {
       type: 'list',
       name: 'branch',
       message: '选择发布的分支?',
-      choices: [
+      choices: answers => ([
         argv.branch,
         ...defBranch.filter(b => b !== curBranch)
-      ],
-      filter:  val => `origin/${val}`,
-      when: answers => answers.job === redboxResPath
+      ]).map(barnch => answers.job === redboxResPath ? { name: barnch ,value: `origin/${barnch}` } : barnch)
     },{
       type: 'list',
       name: 'env',
-      message: '选择要部署的环境',
-      choices: ['QA','QA2','QA3','QA_unit','webtest'],
-      when: answers => answers.job === redboxResPath
+      message: '选择部署的环境?',
+      choices: answers => answers.job === redboxResPath ? ['QA','QA2','QA3','QA_unit','webtest'] : ['QA','webtest']
     },{
-      type: 'list',
-      name: 'branch',
-      message: '选择发布的分支?',
-      choices: [
-        argv.branch,
-        ...defBranch.filter(b => b !== curBranch)
-      ],
-      when: answers => answers.job === redboxH5Path
-    },{
-      type: 'list',
-      name: 'env',
-      message: '选择要部署的环境',
-      choices: ['QA','webtest'],
-      when: answers => answers.job === redboxH5Path
-    }])
-    const confirm = await prompt({
       type: 'confirm',
       name: 'ok',
-      message: `执行${lastSpilt(answer.job,'/')} 部署 分支[${lastSpilt(answer.branch,'/')}] 到 ${answer.env}`,
+      message: answers => `执行${lastSpilt(answers.job,'/')} 部署 分支[${lastSpilt(answers.branch,'/')}] 到 ${answers.env}`,
       default: false
-    })
-    if (!confirm.ok) return spinner.start('部署取消').warn()
+    }])
+    if (!answer.ok) return spinner.start('部署取消').warn()
     spinner.start('开始提交Jenkins')
     const numb = /(\d+)/.exec(await jenkisPost({},`${answer.job}/api/json?tree=nextBuildNumber`))[0]
     const data = await jenkisPost({
