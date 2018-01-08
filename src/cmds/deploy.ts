@@ -112,7 +112,6 @@ export const handler = async argv => {
     const isSucc = resultReg.exec(result)[1] === 'SUCCESS'
     spinner[isSucc ? `succeed` : `fail`](`Job执行${isSucc ? '成功' : '失败'}`)
   } catch (error) {
-    console.log(error)
-    spinner.fail(`部署失败: 请联系作者~`)
+    spinner.fail(`部署失败: JENKINS_TOKEN[${JENKINS_TOKEN}], 请联系作者~`)
   }
 }
