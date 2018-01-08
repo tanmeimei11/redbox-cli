@@ -16,8 +16,8 @@
 
 
 ### Feature
-* 基本依赖安装  
-* 仓库发布到`qa`环境  @half
+* 基本依赖安装   
+* 仓库发布到`qa`环境 
 * 仓库提交`git add`,`git commit -m`,`git push`
 * 目录图片`tiny`压缩
 
