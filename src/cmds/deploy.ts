@@ -3,6 +3,12 @@ import { exec } from 'shelljs'
 import { request,delay,lastSpilt } from '../utils'
 import { createPromptModule } from 'inquirer'
 import { notify } from 'node-notifier'
+import { join } from 'path'
+notify({
+  'title': 'ssss',
+  'icon': join(__dirname, '../assets/jenkins.png'),
+  'message': `ssss`
+})
 const ora = require('ora')
 export const command = 'deploy [branch]'
 export const aliases = 'deploy'
@@ -95,6 +101,7 @@ export const handler = async argv => {
     spinner[isSucc ? `succeed` : `fail`](`Job执行${isSucc ? '成功' : '失败'}`)
     notify({
       'title': lastSpilt(answer.job,'/'),
+      'icon': 'http://10.10.106.240:8001/jenkins/static/81d4cb1c/images/headshot.png',
       'message': `分支[${lastSpilt(answer.branch,'/')}]部署到[${answer.env}]${isSucc ? '成功' : '失败'}`
     })
   } catch (error) {
