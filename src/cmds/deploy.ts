@@ -67,7 +67,7 @@ export const handler = async argv => {
     },{
       type: 'confirm',
       name: 'ok',
-      message: answers => `执行${lastSpilt(answers.job,'/')}分支[${lastSpilt(answers.branch,'/')}]部署到[${answers.env}]`,
+      message: answers => `执行${lastSpilt(answers.job,'/')}分支[${answers.branch.replace(/^origin\//,'')}]部署到[${answers.env}]`,
       default: false
     }])
     if (!answer.ok) return spinner.start('部署取消').warn()
@@ -95,7 +95,7 @@ export const handler = async argv => {
     spinner[isSucc ? `succeed` : `fail`](`Job执行${isSucc ? '成功' : '失败'}`)
     notify({
       'title': lastSpilt(answer.job,'/'),
-      'message': `分支[${lastSpilt(answer.branch,'/')}]部署到[${answer.env}]${isSucc ? '成功' : '失败'}`
+      'message': `分支[${answer.branch.replace(/^origin\//,'')}]部署到[${answer.env}]${isSucc ? '成功' : '失败'}`
     })
   } catch (error) {
     spinner.fail(`部署失败: JENKINS_TOKEN[${JENKINS_TOKEN}], 请联系作者~`)
