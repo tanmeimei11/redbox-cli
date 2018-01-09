@@ -68,7 +68,7 @@ export const handler = async argv => {
     },{
       type: 'confirm',
       name: 'ok',
-      message: answers => `执行${lastSpilt(answers.job,'/')}分支[${lastSpilt(answers.branch,'/')}]部署到[${answers.env}]`,
+      message: answers => `执行${lastSpilt(answers.job,'/')}分支[${answers.branch.replace(/^origin\//,'')}]部署到[${answers.env}]`,
       default: false
     }])
     if (!answer.ok) return spinner.start('部署取消').warn()
