@@ -21,6 +21,7 @@
   "author": "FE@in66.com",
   "license": "MIT",
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
     "@types/node": "^8.5.7",
     "@types/yargs": "^10.0.0",
     "tslint": "^5.8.0",
