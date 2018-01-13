@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// git config --global core.hooksPath $HOME/.git/hooks/
+
 const execSync = require('child_process').execSync
 
 exec = cmd => execSync(cmd).toString()
