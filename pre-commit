@@ -4,11 +4,12 @@
 
 const execSync = require('child_process').execSync
 
-exec = cmd => execSync(cmd).toString()
+const exec = cmd => execSync(cmd).toString()
 
 const red = str => `\u001B[1;31m${str}\u001B[0m`
 const blue = str => `\u001B[1;34m${str}\u001B[0m`
 const grey = str => `\u001B[2;37m${str}\u001B[0m`
+const white = str => `\u001B[1;37m${str}\u001B[0m`
 const magenta = str => `\u001B[1;35m${str}\u001B[0m`
 const redFlash = str => `\u001B[1;31;5m${str}\u001B[0m`
 
@@ -18,6 +19,8 @@ const space = addSpace(14)
 const signStr = `<<<<<<`
 
 const errInfo = []
+
+console.log(`${white(`pre-commit`)}: ${blue(`checking...`)}`)
 
 try {
     const files = exec(`git status -s | awk '{print $2}'`).split('\n').filter(file => file.length)
@@ -38,10 +41,13 @@ try {
         })
     })
 } catch (err) {
-    console.log(err)
+    console.log(`${white(`pre-commit`)}: `, red(err))
 }
 
 if (errInfo.length) {
+
+    console.log(`${white(`pre-commit`)}: ${red(`check fail`)}`)
+
     errInfo.forEach(({
         file,
         line,
@@ -57,5 +63,7 @@ if (errInfo.length) {
 
     process.exit(1)
 }
+
+console.log(`${white(`pre-commit`)}: check success \n`)
 
 process.exit(0)
