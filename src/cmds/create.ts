@@ -7,7 +7,7 @@ import { rm, cp, exec } from 'shelljs'
 const ora = require('ora')
 const download = require('download-git-repo')
 
-const execPromise = cmd =>  new Promise((resolve, reject) => {
+const execPromise = cmd => new Promise((resolve, reject) => {
   exec(cmd, (code, out) => {
     resolve(out)
   })
@@ -50,10 +50,10 @@ export const handler = async argv => {
 
     await installDepence(projectName)
 
-    spinner.succeed('创建成功!')
+    spinner.succeed('创建成功!\n')
   }catch(err){
       console.log(err)
-      spinner.fail(`创建失败, 请联系作者~`)
+      spinner.fail(`创建失败, 请联系作者~\n`)
   }
 }
 
@@ -66,20 +66,21 @@ function downloadRepo(template, dest, projectName = ''){
 
     download(template, dest, { clone: true }, err => {
       if(err){
-        spinner.fail(`模板下载失败: ${err.message.trim()}`)
+        spinner.fail(`模板下载失败: ${err.message.trim()}\n`)
         reject(err)
         return
       }
-      spinner.succeed('模板下载成功')
-      cp('-R', `${dest}/template/*`, join(process.cwd(), projectName))
-      rm('-rf', dest)
-      resolve()
+
+      resolve(execPromise(`cp -r ${dest}/template/ ${join(process.cwd(), projectName)}`).then(res => {
+        rm('-rf', dest)
+        spinner.succeed('模板下载成功\n')
+      }))
     })
   })
 }
 
 async function installDepence(projectName){
-  const spinner = ora('开始安装依赖\n').start()
-  await exec(`cd ${projectName || '.'} && npm i`)
-  spinner.succeed('依赖安装完成')
+  const spinner = ora('安装依赖').start()
+  await execPromise(`cd ${projectName || '.'} && npm i`)
+  spinner.succeed('依赖安装完成\n')
 }
