@@ -81,5 +81,5 @@ function downloadRepo(template, dest){
 async function installDepence(){
   const spinner = ora('开始安装依赖\n').start()
   await exec(`cd ${projectName} && npm i`)
-  spinner.succeed('\n依赖安装完成')
+  spinner.succeed('依赖安装完成')
 }
