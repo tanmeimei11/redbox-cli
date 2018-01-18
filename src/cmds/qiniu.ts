@@ -4,8 +4,12 @@ import { dirname,basename, resolve } from 'path'
 import { readFileSync,appendFileSync } from 'fs'
 import { get,request } from 'https'
 import { getEtag,resResolve,hasUpload } from '../utils'
-import { blue,red } from 'chalk'
+// import chalk from 'chalk'
 const ora = require('ora')
+const chalk = {
+  red : str => `\u001B[1;31m${str}\u001B[0m`,
+  blue : str => `\u001B[1;34m${str}\u001B[0m`
+}
 
 export const command = 'qiniu [globdir]'
 export const aliases = 'qn'
@@ -40,7 +44,7 @@ export const handler = async argv => {
   spinner.info(`找到[${files.length}]个文件`)
   files.forEach(async file => {
     const [path,name,hash] = [dirname(file), basename(file),getEtag(file)]
-    const blueName = blue(`${path}/${file}`)
+    const blueName = chalk.blue(`${path}/${file}`)
     let qiniuPath = `${path}/.qnrc`
     if (!test('-f', qiniuPath)) appendFileSync(qiniuPath, '{}', { flag: 'w' })
     spinner.start(`开始上传 ${blueName}`)
@@ -52,7 +56,7 @@ export const handler = async argv => {
       appendFileSync(qiniuPath, JSON.stringify(qiniuData, null, '\t'), { flag: 'w' })
       spinner.succeed(`上传成功 ${blueName}`).start().info(`七牛地址: ${qiniuUrl}`)
     } catch (error) {
-      spinner.fail(`上传失败 ${red(`${path}/${file}`)}`)
+      spinner.fail(`上传失败 ${chalk.red(`${path}/${file}`)}`)
     }
   })
 }
