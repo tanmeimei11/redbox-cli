@@ -13,15 +13,12 @@ const execPromise = cmd =>  new Promise((resolve, reject) => {
   })
 })
 
-const currPath = process.cwd()
-let projectName = 'my-project'
-
 export const command = `create [project]`
 export const aliases = `create`
 export const desc = `在当前从模板创建新项目`
 export const  builder = {
     project: {
-        default: projectName
+        default: 'my-project'
     }
 }
 
@@ -29,11 +26,9 @@ const repoTpl = `gitlab:githost.in66.cc:in-template/redbox-tpl`
 const tplBranch = [`promo-tpl`]
 
 export const handler = async argv => {
-  projectName = argv.project
 
   const spinner = ora('开始创建').info()
   const prompt = createPromptModule()
-  const projectPath = join(currPath, projectName)
 
   try{
     const answer = await prompt([{
@@ -41,14 +36,19 @@ export const handler = async argv => {
       name: 'template',
       message: '选择模板?',
       choices: tplBranch
+    }, {
+      type: 'confirm',
+      name: 'newDir',
+      message: answers => `创建新的目录${argv.project}吗?`,
+      default: true
     }])
+    const projectName = answer.newDir ? argv.project : ''
     const template = `${repoTpl}#${answer.template}`
-    const dest = join(projectPath, answer.template)
+    const dest = join(process.cwd(), projectName, answer.template)
 
-    await downloadRepo(template, dest)
+    await downloadRepo(template, dest, projectName)
 
-    await installDepence()
-
+    await installDepence(projectName)
 
     spinner.succeed('创建成功!')
   }catch(err){
@@ -57,7 +57,7 @@ export const handler = async argv => {
   }
 }
 
-function downloadRepo(template, dest){
+function downloadRepo(template, dest, projectName = ''){
   return new Promise((resolve, reject) => {
     if (exists(dest)) rm('-rf', dest)
 
@@ -71,15 +71,15 @@ function downloadRepo(template, dest){
         return
       }
       spinner.succeed('模板下载成功')
-      cp('-R', `${dest}/template/*`, join(currPath, projectName))
+      cp('-R', `${dest}/template/*`, join(process.cwd(), projectName))
       rm('-rf', dest)
       resolve()
     })
   })
 }
 
-async function installDepence(){
+async function installDepence(projectName){
   const spinner = ora('开始安装依赖\n').start()
-  await exec(`cd ${projectName} && npm i`)
+  await exec(`cd ${projectName || '.'} && npm i`)
   spinner.succeed('依赖安装完成')
 }
