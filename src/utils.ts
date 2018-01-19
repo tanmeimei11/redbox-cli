@@ -1,6 +1,8 @@
 import { request as _request } from 'http'
 import { createHash } from 'crypto'
 import { readFileSync } from 'fs'
+import { ls } from 'shelljs'
+const ora = require('ora')
 
 /**
  * 延迟等待
@@ -35,6 +37,17 @@ export const resResolve = resolve => uploadRes => {
   }).on('end', () => {
     resolve(JSON.parse(resInfo.toString()))
   })
+}
+
+/**
+ * 通过正则查找文件
+ * @param param0
+ */
+export const findFiles = ({ globdir }) => {
+  const spinner = ora('开始查找文件').start()
+  const files = ls(globdir)
+  spinner.info(`找到[${files.length}]个文件`)
+  return [ files,spinner ]
 }
 
 /**
@@ -99,4 +112,9 @@ export const getEtag = file => {
   }
 
   return calcEtag()
+}
+
+export const chalk = {
+  red : str => `\u001B[1;31m${str}\u001B[0m`,
+  blue : str => `\u001B[1;34m${str}\u001B[0m`
 }

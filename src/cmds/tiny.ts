@@ -2,13 +2,7 @@ import { ls,test,cat } from 'shelljs'
 import { dirname,basename, resolve } from 'path'
 import { readFileSync,appendFileSync,createReadStream,createWriteStream } from 'fs'
 import { get,request } from 'https'
-import { getEtag,resResolve,hasUpload } from '../utils'
-// import chalk from 'chalk'
-const ora = require('ora')
-const chalk = {
-  red : str => `\u001B[1;31m${str}\u001B[0m`,
-  blue : str => `\u001B[1;34m${str}\u001B[0m`
-}
+import { getEtag,resResolve,hasUpload,findFiles,chalk } from '../utils'
 
 export const command = 'tiny [globdir]'
 export const aliases = 'tiny'
@@ -35,16 +29,14 @@ const downImg = (url,writeS) => new Promise(resolve => get(url, imgRes => {
 }))
 
 export const handler = async argv => {
-  const spinner = ora('开始查找文件').start()
-  const files = ls(argv.globdir)
-  spinner.info(`找到[${files.length}]个文件`)
+  const [files,spinner] = findFiles({ globdir: argv.globdir })
   files.forEach(async file => {
     const [path,name,hash] = [dirname(file), basename(file),getEtag(file)]
     const blueName = chalk.blue(`${path}/${file}`)
-    let tinyPath = `${path}/.tinyrc`
-    if (!test('-f', tinyPath)) appendFileSync(tinyPath, '{}', { flag: 'w' })
     spinner.start(`开始压缩 ${blueName}`)
     try {
+      let tinyPath = `${path}/.tinyrc`
+      if (!test('-f', tinyPath)) appendFileSync(tinyPath, '{}', { flag: 'w' })
       let tinyData = JSON.parse(cat(tinyPath))
       if (hasUpload(name,tinyData,hash)) {
         spinner.succeed(`压缩成功 ${blueName}`)
