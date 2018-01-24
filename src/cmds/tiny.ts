@@ -43,7 +43,6 @@ export const handler = async argv => {
       } else {
         const { input,output } = await tinyImg({ path, name })
         let writeS = createWriteStream(`${path}/${name}`)
-        await downImg(output.url,writeS)
         writeS.on('close', () => {
           let compressHash = getEtag(`${path}/${name}`)
           tinyData = JSON.parse(cat(tinyPath))
@@ -51,6 +50,7 @@ export const handler = async argv => {
           appendFileSync(tinyPath, JSON.stringify(tinyData, null, '\t'), { flag: 'w' })
           spinner.succeed(`压缩成功 ${blueName}`).start().info(`压缩大小: ${(input.size / 1024).toFixed(2)}KB  => ${(output.size / 1024).toFixed(2)}KB`)
         })
+        await downImg(output.url,writeS)
       }
     } catch (error) {
       spinner.fail(`压缩失败 ${chalk.red(`${path}/${file}`)}`)
