@@ -36,7 +36,7 @@ export const handler = async argv => {
   const [files,spinner] = findFiles({ globdir: argv.globdir })
   files.forEach(async file => {
     const [path,name,hash] = [dirname(file), basename(file),getEtag(file)]
-    const blueName = chalk.blue(`${path}/${file}`)
+    const blueName = chalk.blue(file)
     let qiniuPath = `${path}/.qnrc`
     if (!test('-f', qiniuPath)) appendFileSync(qiniuPath, '{}', { flag: 'w' })
     spinner.start(`开始上传 ${blueName}`)
@@ -48,7 +48,7 @@ export const handler = async argv => {
       appendFileSync(qiniuPath, JSON.stringify(qiniuData, null, '\t'), { flag: 'w' })
       spinner.succeed(`上传成功 ${blueName}`).start().info(`七牛地址: ${qiniuUrl}`)
     } catch (error) {
-      spinner.fail(`上传失败 ${chalk.red(`${path}/${file}`)}`)
+      spinner.fail(`上传失败 ${chalk.red(file)}`)
     }
   })
 }

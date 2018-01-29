@@ -33,7 +33,7 @@ export const handler = async argv => {
   const [files, spinner] = findFiles({ globdir: argv.globdir })
   files.forEach(async file => {
     const [path, name, hash] = [dirname(file), basename(file), getEtag(file)]
-    const blueName = chalk.blue(`${path}/${file}`)
+    const blueName = chalk.blue(file)
     spinner.start(`开始压缩 ${blueName}`)
     try {
       let tinyPath = `${path}/.tinyrc`
@@ -52,7 +52,7 @@ export const handler = async argv => {
         spinner.succeed(`压缩成功 ${blueName}`).start().info(`压缩大小: ${(input.size / 1024).toFixed(2)}KB  => ${(output.size / 1024).toFixed(2)}KB`)
       }
     } catch (error) {
-      spinner.fail(`压缩失败 ${chalk.red(`${path}/${file}`)}`)
+      spinner.fail(`压缩失败 ${chalk.red(file)}`)
     }
   })
 }
